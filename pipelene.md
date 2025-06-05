@@ -111,4 +111,55 @@ gatk AddOrReplaceReadGroups \
   -RGID WE001 -RGLB lib1 -RGPL illumina -RGPU unit1 -RGSM WE001
 ```
 
+#### Mark Duplicates 
+
+After alignment, I used GATK’s MarkDuplicates to identify and flag PCR or optical duplicate reads—i.e., reads that originate from the same DNA fragment but appear multiple times due to library amplification artifacts. These duplicates do not represent independent observations and can bias downstream analyses, particularly variant allele frequency estimation and variant calling confidence.
+
+```bash
+gatk MarkDuplicates \
+  -I samtools_res/WE001_rg.bam \
+  -O gatk_res/WE001_marked.bam \
+  -M gatk_res/WE001_marked.metrics.txt
+
+samtools index gatk_res/WE001_marked.bam
+```
+After this, the marked bam file was indexed again. 
+
+```bash
+samtools index gatk_res/WE001_marked.bam
+```
+#### Base quality recalibration
+
+The next step is Base Quality Recalibration (BQSR). This applies machine learning to correct patterns of systematic errors in the base quality scores. Base quality scores play an important role in weighing the evidence for or against possible variant alleles during the variant discovery process, so it's important to correct any systematic bias observed in the data. To distinguish between true sequencing errors and real variants, it needs a list of "known" trusted variants.
+
+```bash
+wget https://ftp.ncbi.nih.gov/snp/organisms/human_9606/VCF/00-common_all.vcf.gz
+wget https://ftp.ncbi.nih.gov/snp/organisms/human_9606/VCF/00-common_all.vcf.gz.tbi
+```
+
+The chromosome naming is inconsistent beweem NCBI and UCSC, namely '1, 2, 3, ...' and 'chr1, chr2, chr3, ...' To fix this bcftools annontate was used
+
+```bash
+bcftools query -f '%CHROM\n' 00-common_all.vcf.gz | uniq > chrom.txt
+# Edit chrom.txt manually or script the rename map
+bcftools annotate --rename-chrs chrom.txt 00-common_all.vcf.gz -Oz -o renamed_common.vcf.gz
+```
+
+After all this GATK BaseRecalibrator can be used to create a table, that is later used by ApplyBQSR
+
+```bash
+gatk BaseRecalibrator \
+  -I gatk_res/WE001_marked.bam \
+  -R hg38.fa \
+  --known-sites renamed_common.vcf.gz \
+  -O gatk_res/WE001_recal_data.table
+
+gatk ApplyBQSR \
+  -R hg38.fa \
+  -I gatk_res/WE001_marked.bam \
+  --bqsr-recal-file gatk_res/WE001_recal_data.table \
+  -O gatk_res/WE001_recalibrated.bam
+```
+
+
 
