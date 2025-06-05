@@ -45,10 +45,54 @@ After trimming, a second quality check was performed to assess the results.
 | Forward | ![per_base_quality](https://github.com/user-attachments/assets/4893d329-2e2d-4b60-b8c7-869631520ba9) | ![per_base_quality](https://github.com/user-attachments/assets/fea045cb-8f75-45a9-9a8d-5a65b709df09) |
 | Reverse | ![per_base_quality](https://github.com/user-attachments/assets/df41bacd-00b4-4e18-8f09-8d3944feb1b5) | ![per_base_quality](https://github.com/user-attachments/assets/a90785b0-76dd-4ea2-8ac1-e8695574a2b2) | 
 
+#### Reference preparation 
 
+Hg38 assembly was retrieved from the UCSC database. In reality, I have made a mistake in choosing the reference fasta file, as I dowloaded the primary assembly, that contains alternative chromosomes and random sequences, and not the analysis set, containing only the canonical chromosomes. More on this later. 
 
+Prior to alignment, the reference genome file was indexed using BWA. This will enable efficient and accurate alignment of reads by reducing the time and memor required to search for matching sequences across the genome. 
 
+```bash
+wget https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz
+gunzip hg38.fa.gz
+bwa index hg38.fa
+```
 
+#### Read alignment
+
+BWA was chosen for read alignment due to its high accuracy, efficiency with short Illumina reads, and support for gapped alignment, and compatibility with downstream variant calling tools. (Another hiccup: did not add read groups in this step. Fixed later)
+
+```bash
+bwa mem -t 22 hg38.fa \
+  trimming_res/WE001_R1_paired.fastq.gz trimming_res/WE001_R2_paired.fastq.gz \
+  > WE001_aligned.sam
+```
+
+#### SAM → BAM, Sorting, and Stats
+
+Sam file was converted into bam:
+
+```bash 
+samtools view -@ 22 -bo bwa_res/WE001_aligned.bam WE001_aligned.sam
+```
+
+To get alignment statistics the following command was run: 
+
+```bash
+samtools stats bwa_res/WE001_aligned.samtools statsbam > bwa_res/stats.txt
+```
+Some of the key stats are: 
+
+| Metric                      | WE001                | WE002 | 
+| -------                     | -----                | ----- |
+| Total reads (raw sequences) | 122,801,102          |
+| Mapped reads                | 122,794,992          |          
+| Properly paired reads       | 122,158,754 (≈99.5%) |     
+| Unmapped reads              | 6,110                |
+| Reads MQ=0                  | 4,225,839            |
+| Error rate                  | 0.158%               |
+| Average read length         | 98 bp                |
+| Average quality             | 37.4                 |
+| Insert size (mean ± SD)     | 212.0 ± 68.1 bp      | 
 
 
 
