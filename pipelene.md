@@ -90,9 +90,25 @@ Some of the key stats are:
 | Unmapped reads              | 6,110                | 9,944               |
 | Reads MQ=0                  | 4,225,839            | 3,414,963           |
 | Error rate                  | 0.158%               | 0.193%              | 
-| Average read length         | 98 bp                | 95                  |
+| Average read length         | 98 bp                | 95 bp               |
 | Average quality             | 37.4                 | 36.5                |
 | Insert size (mean ± SD)     | 212.0 ± 68.1 bp      | 190.5 ± 46.4 bp     |
 
+The sam files were sorted and indexed
+```bash
+samtools sort -@ 22 -o samtools_res/WE001_sorted.bam bwa_res/WE001_aligned.bam
+samtools index samtools_res/WE001_sorted.bam
+```
+
+#### Add Read Groups (fixing previous omission)
+
+As said prior, the read groups were not added during alignment step. Therefore, gatk AddOrReplaceReadGroups function was used to add a 'generic' read group.
+
+```bash
+gatk AddOrReplaceReadGroups \
+  -I samtools_res/WE001_sorted.bam \
+  -O samtools_res/WE001_rg.bam \
+  -RGID WE001 -RGLB lib1 -RGPL illumina -RGPU unit1 -RGSM WE001
+```
 
 
