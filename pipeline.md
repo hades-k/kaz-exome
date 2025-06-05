@@ -10,7 +10,7 @@ fastqc -o fastqc_results WE_run_first_fastq_gz/WE001.first.R1.fastq.gz
 | -     | Per base quality WE001 | Per base quality WE002 |
 | ----- | ------                 | ------                 |
 | Forward | <img src="https://github.com/hades-k/thesis/blob/main/fastqc/WE001.R1.png">| <img src = "https://github.com/hades-k/thesis/blob/main/fastqc/WE002.R1.png"> |
-| Reverse | <img scr = 'https://github.com/hades-k/thesis/blob/main/fastqc/WE001.R2.png'> | <img src = 'https://github.com/hades-k/thesis/blob/main/fastqc/WE002.R2.png'> |
+| Reverse | <img src = 'https://github.com/hades-k/thesis/blob/main/fastqc/WE001.R2.png'> | <img src = 'https://github.com/hades-k/thesis/blob/main/fastqc/WE002.R2.png'> |
 
 #### Adapter and Quality Trimming
 
