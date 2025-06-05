@@ -5,8 +5,8 @@ Steps were repeated for 2 samples WE001 and WE002 forward and reverse strands us
 ```bash
 fastqc -o fastqc_results WE_run_first_fastq_gz/WE001.first.R1.fastq.gz
 ```
-| -  | Per base quality WE001 | Per base quality WE002 |
-| ----- | ------| ------|
+| -     | Per base quality WE001 | Per base quality WE002 |
+| ----- | ------                 | ------                 |
 | Forward | ![per_base_quality](https://github.com/user-attachments/assets/43c9b67d-1e22-4a80-9d88-2850e1b14134) | ![per_base_quality](https://github.com/user-attachments/assets/cdd54e31-3bfa-418c-8984-3b262e7c576c) |
 | Reverse | ![per_base_quality](https://github.com/user-attachments/assets/e5cc4ae6-554d-4083-bec8-73fa64322d3b) | ![per_base_quality](https://github.com/user-attachments/assets/8ae41847-60d6-4b3b-8e5e-61aa7561f79b) |
 
@@ -82,17 +82,17 @@ samtools stats bwa_res/WE001_aligned.samtools statsbam > bwa_res/stats.txt
 ```
 Some of the key stats are: 
 
-| Metric                      | WE001                | WE002 | 
-| -------                     | -----                | ----- |
-| Total reads (raw sequences) | 122,801,102          |
-| Mapped reads                | 122,794,992          |          
-| Properly paired reads       | 122,158,754 (≈99.5%) |     
-| Unmapped reads              | 6,110                |
-| Reads MQ=0                  | 4,225,839            |
-| Error rate                  | 0.158%               |
-| Average read length         | 98 bp                |
-| Average quality             | 37.4                 |
-| Insert size (mean ± SD)     | 212.0 ± 68.1 bp      | 
+| Metric                      | WE001                | WE002               | 
+| -------                     | -----                | -----               |
+| Total reads (raw sequences) | 122,801,102          | 89,234,972          |
+| Mapped reads                | 122,794,992          | 89,225,028          |         
+| Properly paired reads       | 122,158,754 (≈99.5%) | 88,513,144 (≈99.2%) | 
+| Unmapped reads              | 6,110                | 9,944               |
+| Reads MQ=0                  | 4,225,839            | 3,414,963           |
+| Error rate                  | 0.158%               | 0.193%              | 
+| Average read length         | 98 bp                | 95                  |
+| Average quality             | 37.4                 | 36.5                |
+| Insert size (mean ± SD)     | 212.0 ± 68.1 bp      | 190.5 ± 46.4 bp     |
 
 
 
