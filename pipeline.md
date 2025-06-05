@@ -1,3 +1,5 @@
+### Quality check and trimming
+
 #### Initial quality check
 
 Steps were repeated for 2 samples WE001 and WE002 forward and reverse strands using command line FastQC
@@ -44,6 +46,10 @@ After trimming, a second quality check was performed to assess the results.
 | ----- | ------| ------|
 | Forward | ![per_base_quality](https://github.com/user-attachments/assets/4893d329-2e2d-4b60-b8c7-869631520ba9) | ![per_base_quality](https://github.com/user-attachments/assets/fea045cb-8f75-45a9-9a8d-5a65b709df09) |
 | Reverse | ![per_base_quality](https://github.com/user-attachments/assets/df41bacd-00b4-4e18-8f09-8d3944feb1b5) | ![per_base_quality](https://github.com/user-attachments/assets/a90785b0-76dd-4ea2-8ac1-e8695574a2b2) | 
+
+______
+
+### Read alignment and pre-processing for variant discovery
 
 #### Reference preparation 
 
@@ -161,5 +167,7 @@ gatk ApplyBQSR \
   -O gatk_res/WE001_recalibrated.bam
 ```
 
+_______
 
+### Variant discovery 
 
