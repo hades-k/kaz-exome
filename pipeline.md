@@ -9,8 +9,8 @@ fastqc -o fastqc_results WE_run_first_fastq_gz/WE001.first.R1.fastq.gz
 ```
 | -     | Per base quality WE001 | Per base quality WE002 |
 | ----- | ------                 | ------                 |
-| Forward | ![per_base_quality](https://github.com/user-attachments/assets/43c9b67d-1e22-4a80-9d88-2850e1b14134) | ![per_base_quality](https://github.com/user-attachments/assets/cdd54e31-3bfa-418c-8984-3b262e7c576c) |
-| Reverse | ![per_base_quality](https://github.com/user-attachments/assets/e5cc4ae6-554d-4083-bec8-73fa64322d3b) | ![per_base_quality](https://github.com/user-attachments/assets/8ae41847-60d6-4b3b-8e5e-61aa7561f79b) |
+| Forward | <img src="https://github.com/hades-k/thesis/blob/main/fastqc/WE001.R1.png">| <img src = "https://github.com/hades-k/thesis/blob/main/fastqc/WE002.R1.png"> |
+| Reverse | <img scr = 'https://github.com/hades-k/thesis/blob/main/fastqc/WE001.R2.png'> | <img src = 'https://github.com/hades-k/thesis/blob/main/fastqc/WE002.R2.png'> |
 
 #### Adapter and Quality Trimming
 
@@ -44,8 +44,8 @@ After trimming, a second quality check was performed to assess the results.
 
 | -  | Per base quality WE001 | Per base quality WE002 |
 | ----- | ------| ------|
-| Forward | ![per_base_quality](https://github.com/user-attachments/assets/4893d329-2e2d-4b60-b8c7-869631520ba9) | ![per_base_quality](https://github.com/user-attachments/assets/fea045cb-8f75-45a9-9a8d-5a65b709df09) |
-| Reverse | ![per_base_quality](https://github.com/user-attachments/assets/df41bacd-00b4-4e18-8f09-8d3944feb1b5) | ![per_base_quality](https://github.com/user-attachments/assets/a90785b0-76dd-4ea2-8ac1-e8695574a2b2) | 
+| Forward | <img src = 'https://github.com/hades-k/thesis/blob/main/fastqc/WE001.R1.paired.png'> | <img src = 'https://github.com/hades-k/thesis/blob/main/fastqc/WE002.R1.paired.png'> |
+| Reverse | <img src = 'https://github.com/hades-k/thesis/blob/main/fastqc/WE001.R2.paired.png'> | <img src = 'https://github.com/hades-k/thesis/blob/main/fastqc/WE002.R2.paired.png'> | 
 
 ______
 
