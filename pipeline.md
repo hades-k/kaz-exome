@@ -336,7 +336,9 @@ Possible explanations of differences:
 - Different reference dataset of known variants for BQSR - mine was most likely smaller, used NCBI common vars
 - Gold VCF has a higher Ti/Tv - likely higher specificity and stricter filtering
 - My VCF has more variants in dbsnp - different version of dbsnp or inclusion of lower quality variants
-- I used joint calling, so variants were added together even if they are present in only one sample, full gold VCF has roughly the same number of variants as one-sample gold. Some kind of filter was applied, keeping high quality variants present in most samples. 
+- I used joint calling, so variants were added together even if they are present in only one sample, full gold VCF has roughly the same number of variants as one-sample gold. Some kind of filter was applied, keeping high quality variants present in most samples.
+- Most likely gold was manually filtered to exclude variants with a certain percentage of missingness - according to bioinfromatician who performed it
+- Gold was processed 10 years ago, tools, algorithms, etc change and evolve
 
 
 
