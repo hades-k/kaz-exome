@@ -2,7 +2,7 @@ import sys
 from collections import defaultdict
 from typing import Dict, Any
 
-vcf_file = 'my_vcf/joint_filtered.vcf'
+vcf_file = 'MS_KAZ_WE_125_kaz_samples.MSHC.gold.vcf'
 
 def calculate_vcf_stats(vcf_file: str) -> Dict[str, Any]:
     stats = {
