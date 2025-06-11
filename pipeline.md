@@ -340,6 +340,12 @@ Possible explanations of differences:
 - Most likely gold was manually filtered to exclude variants with a certain percentage of missingness - according to bioinfromatician who performed it
 - Gold was processed 10 years ago, tools, algorithms, etc change and evolve
 
+[Calculations here](https://github.com/hades-k/thesis/blob/main/shared_vars_and_missingness.ipynb)
+
+Calculating the number of variant present in both of my samples in my full VCF, I got **392741 (~44%)**. Less than half of the variants were present in both samples. In addition, I looked at the gold vcf missingness per variant. The mean value is **5.58%**, and the median is **0.8%**, meaning that afterwards variants with missingness above a certain treshold were removed. Interestingly, this filter was imperfect, as there are very few variants with very high missingness present, having escaped filters, max value is **99.2%**. 
+
+
+
 
 
 
