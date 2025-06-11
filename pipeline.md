@@ -276,5 +276,70 @@ Using the recommended tresholds for hard fitering:
 ```bash
 gatk VariantFiltration   -V joint_snps.vcf.gz   -O joint_filtered_snps.vcf.gz \
   --filter-name "QD_lt_2" --filter-expression "QD < 2.0" \
-  --filter-name "FS_gt_60" --filter-expression "FS > 60.0"   --filter-name "MQ_lt_40" --filter-expression "MQ < 40.0"   --filter-name "MQRankSum_lt_-12.5" --filter-expression "MQRankSum < -12.5"   --filter-name "ReadPosRankSum_lt_-8" --filter-expression "ReadPosRankSum < -8.0"
+  --filter-name "FS_gt_60" --filter-expression "FS > 60.0"  \
+  --filter-name "MQ_lt_40" --filter-expression "MQ < 40.0"   \
+  --filter-name "MQRankSum_lt_-12.5" --filter-expression "MQRankSum < -12.5"   \
+  --filter-name "ReadPosRankSum_lt_-8" --filter-expression "ReadPosRankSum < -8.0"
+
+gatk VariantFiltration   -V joint_indels.vcf.gz  -O joint_filtered_indels.vcf.gz   \
+  --filter-name "QD_lt_2"   --filter-expression "QD < 2.0"   \
+  --filter-name "FS_gt_200" --filter-expression "FS > 200.0"   \
+  --filter-name "ReadPosRankSum_lt_-20" --filter-expression "ReadPosRankSum < -20.0"
 ```
+
+And Merging the snp vcf and indel vcf back together:
+
+```bash
+gatk MergeVcfs   -I joint_filtered_snps.vcf.gz   -I joint_filtered_indels.vcf.gz   -O joint_filtered.vcf.gz
+```
+
+### Annotation and comparison to the pre-processed files
+
+#### Annotation 
+
+Annovar was used for filter-based annotation. Using avsnp150 (an abbreviated version of dbSNP 150 with left-normalization by ANNOVAR developers), RS IDs were added to the vcf file:
+
+```bash 
+table_annovar.pl joint_filtered.vcf /Applications/annovar/humandb   \
+  -buildver hg38   -out annovar_res/annotated   -remove   \
+  -protocol avsnp150   -operation f   -vcfinput -otherinfo
+```
+
+ This file was compared to the pre-processed data. Additionally, sample 1 (WE001) was compared to the pre-processed vcf containing variants for sample one using python:
+ 
+ [stats](https://github.com/hades-k/thesis/blob/main/vcf_stats.py)
+ 
+ [rs id comparison](https://github.com/hades-k/thesis/blob/main/count_rs_variants.py)
+
+| Statistic        | My VCF full | Gold VCF full | My VCF WE001 | Gold VCF WE001 |
+| ---              | ---         | ---           | ---          | ---            | 
+| Total variants   | 900195      | 500376        | 520962       | 496454         |
+| SNPs             | 793691      | 442486        | 451009       | 439326         |
+| INDELs           | 106504      | 57890         | 69953        | 57128          |
+| Quality min      | 30.0        | 30.0          | 30.01        | 30.0           |
+| Quality max      | 66550.13    | 5149018.88    | 41806.06     | 5149018.88     |
+| Quality mean     | 466.43      | 28494.77      | 489.81       | 28698.81       |
+| Pass filters     | 885256      | 474413        | 510564       | 470905         |
+| Transitions      | 531449      | 310132        | 305999       | 308057         |
+| Transversions    | 262242      | 132354        | 145010       | 131269         |
+| Ti/Tv ratio      | 2.03        | 2.34          | 2.11         | 2.35           |
+| RS variant count | 834048      | 369515        | 485420       | 366361         |
+| % dbsnp vars in total |  92.65 | 73.85         | 93.18        | 73.79          |
+| Overlapping rs   | 129337      |      <-       | 97240        | <-             |
+| % overlap        | 15.5        | 35            | 20           | 26.5           |
+
+Possible explanations of differences: 
+
+- Different reference genome builds were used hg38 v hg19 - would explain a small difference, not such a drastic one
+- My VCF uses hard filtering, the gold VCF uses VQSR - does not impact total number
+- Different pre processing - need to figure this out
+- Different reference dataset of known variants for BQSR - mine was most likely smaller, used NCBI common vars
+- Gold VCF has a higher Ti/Tv - likely higher specificity and stricter filtering
+- My VCF has more variants in dbsnp - different version of dbsnp or inclusion of lower quality variants
+- I used joint calling, so variants were added together even if they are present in only one sample, full gold VCF has roughly the same number of variants as one-sample gold. Some kind of filter was applied, keeping high quality variants present in most samples. 
+
+
+
+
+
+
