@@ -28,17 +28,17 @@ trimmomatic PE -threads 16 \
 
 Using this command, bases with quality lower than 20 were trimmed from both ends of a read. Additionally, trimmomatic would scan the read using a 4bp sliding window, and would trim bases if the average quality would be < 20. After completion, if the read length would be under 30bp, the read would be discarded. The summary of the process is available below: 
 
-| WE001 | WE002 |
-| ---- | ----|
-| Input Read Pairs: 63429143 | Input Read Pairs: 48713866 |
-| Both Surviving Reads: 61400551 | Both Surviving Reads: 44617486 |
-| Surviving Read Percent: 96.80 | Both Surviving Read Percent: 91.59 |
-| Forward Only Surviving Reads: 1328997 | Forward Only Surviving Reads: 2639723 |
+| WE001                                     | WE002                                     |
+| ----                                      | ----                                      |
+| Input Read Pairs: 63429143                | Input Read Pairs: 48713866                |
+| Both Surviving Reads: 61400551            | Both Surviving Reads: 44617486            |
+| Surviving Read Percent: 96.80             | Both Surviving Read Percent: 91.59        |
+| Forward Only Surviving Reads: 1328997     | Forward Only Surviving Reads: 2639723     |
 | Forward Only Surviving Read Percent: 2.10 | Forward Only Surviving Read Percent: 5.42 |
-| Reverse Only Surviving Reads: 476903 | Reverse Only Surviving Reads: 878593 |
+| Reverse Only Surviving Reads: 476903      | Reverse Only Surviving Reads: 878593      |
 | Reverse Only Surviving Read Percent: 0.75 | Reverse Only Surviving Read Percent: 1.80 |
-| Dropped Reads: 222692 | Dropped Reads: 578064 |
-| Dropped Read Percent: 0.35 | Dropped Read Percent: 1.19 |
+| Dropped Reads: 222692                     | Dropped Reads: 578064                     |
+| Dropped Read Percent: 0.35                | Dropped Read Percent: 1.19                |
 
 After trimming, a second quality check was performed to assess the results. 
 
@@ -129,6 +129,21 @@ gatk MarkDuplicates \
 
 samtools index gatk_res/WE001_marked.bam
 ```
+Some of the key stats form marked metrics files are: 
+
+| Stat                           | WE001      | WE002      |
+| ---                            | ---        | ---        |
+| UNPAIRED_READS_EXAMINED        | 3350       | 5748       |
+| READ_PAIRS_EXAMINED            | 61395821   | 44609640   |
+| SECONDARY_OR_SUPPLEMENTARY_RDS | 26704      | 52170      |
+| UNMAPPED_READS                 | 6110       | 9944       |
+| UNPAIRED_READ_DUPLICATES       | 982        | 1494       |
+| READ_PAIR_DUPLICATES           | 1865459    | 647259     |
+| READ_PAIR_OPTICAL_DUPLICATES   | 22709      | 4005       |
+| PERCENT_DUPLICATION            | 0.030391   | 0.014525   |
+| ESTIMATED_LIBRARY_SIZE         | 1001459378 | 1531656110 |
+
+
 After this, the marked bam file was indexed again. 
 
 ```bash
@@ -171,3 +186,95 @@ _______
 
 ### Variant discovery 
 
+Following GATK best prractices:
+
+HaplotypeCaller wau used for this on the recallibrated set. This tool supports multi-thread on the native pair hidden markov models stage only. 
+
+```bash
+gatk HaplotypeCaller \
+  -R hg38.fa \
+  -I gatk_res/WE001_recalibrated.bam \
+  -O gatk_res/WE001.g.vcf.gz \
+  --native-pair-hmm-threads 25 \
+  -ERC GVCF
+```
+#### Joint genotyping 
+
+After both samples have been processed, we can join them for further work 
+
+```bash 
+echo -e "WE001\t/media/dell_816/aidana/KAZ_WE/gatk_res/WE001.g.vcf.gz\nWE002\t/media/dell_816/aidana/KAZ_WE/gatk_res/WE002.g.vcf.gz" > sample_map.txt
+```
+``` bash 
+nohup gatk GenomicsDBImport \
+  --genomicsdb-workspace-path gatk_res/cohort \
+  --sample-name-map sample_map.txt \
+  -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 \
+  -L chr11 -L chr12 -L chr13 -L chr14 -L chr15 -L chr16 -L chr17 -L chr18 -L chr19 \
+  -L chr20 -L chr21 -L chr22 -L chrX -L chrY \
+  --tmp-dir /media/dell_815/aidana/KAZ_WE/gatk_res/tmp \
+  > GenomicsDBImport.log 2>&1 &
+
+```
+
+```bash
+gatk GenotypeGVCFs \
+  -R hg38.fa \
+  -V gendb:///media/dell_815/aidana/KAZ_WE/gatk_res/cohort \
+  -O /media/dell_815/aidana/KAZ_WE/gatk_res/cohort/joint_genotyped.vcf.gz \
+  --tmp-dir /media/dell_815/aidana/KAZ_WE/gatk_res/tmp
+```
+
+This way we have joined the two vcf files into one for a population analysis
+
+#### Variant filtration 
+
+We do not have enough samples to perform VQSR, so just hard-filtering for now. We need to split the vcf into SNPs and Indels. 
+
+```bash
+gatk SelectVariants \
+  -V gatk_res/cohort/joint_genotyped.vcf.gz \
+  --select-type-to-include INDEL \
+  -O gatk_res/cohort/joint_indels.vcf.gz
+
+gatk SelectVariants \
+  -V gatk_res/cohort/joint_genotyped.vcf.gzz \
+  --select-type-to-include SNP \
+  -O gatk_res/cohort/joint_snps.vcf.gz
+```
+
+To visualize the variant quality distribution: 
+
+```bash
+gatk VariantsToTable \
+  -V joint_snps.vcf.gz \
+  -F QD -F FS -F MQ -F MQRankSum -F ReadPosRankSum \
+  -O joint_snps_annotations.table
+```
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("WE001_snps_annotations.table", sep="\t")
+annotations = ['QD', 'FS', 'MQ', 'MQRankSum', 'ReadPosRankSum']
+
+plt.figure(figsize=(15,10))
+for i, col in enumerate(annotations, 1):
+    plt.subplot(3, 2, i)
+    df[col].hist(bins=50)
+    plt.title(col)
+    plt.xlabel(col)
+    plt.ylabel("Count")
+
+plt.tight_layout()
+plt.show()
+
+```
+Using the recommended tresholds for hard fitering: 
+
+```bash
+gatk VariantFiltration   -V joint_snps.vcf.gz   -O joint_filtered_snps.vcf.gz \
+  --filter-name "QD_lt_2" --filter-expression "QD < 2.0" \
+  --filter-name "FS_gt_60" --filter-expression "FS > 60.0"   --filter-name "MQ_lt_40" --filter-expression "MQ < 40.0"   --filter-name "MQRankSum_lt_-12.5" --filter-expression "MQRankSum < -12.5"   --filter-name "ReadPosRankSum_lt_-8" --filter-expression "ReadPosRankSum < -8.0"
+```
