@@ -45,3 +45,31 @@ Admixture
 ```bash 
 admixture --cv 100_samp_subset/merged_large.bed 2 | tee 100_samp_subset/log2.out
 ```
+
+```bash
+awk -F'\t' '{print $1, $5}' *_subset.tsv > id2pop.txt
+```
+In python, fix the spaces 
+
+```python
+input_file = 'id2pop.txt'
+output_file = 'id2pop_fix.txt'
+
+with open(input_file, 'r', encoding='utf-8') as f:
+    lines = f.readlines()
+
+fixed_lines = [
+    line.replace(" Chinese", "_Chinese").replace(" Vietnamese", "_Vietnamese")
+    for line in lines
+]
+with open(output_file, 'w', encoding='utf-8') as f:
+    f.writelines(fixed_lines)
+```
+
+```bash
+awk 'NR==FNR {a[$1]=$2; next} ($2 in a) {print a[$2], $2} \
+  !($2 in a) {print "Kazakh", $2}' id2pop_fix.txt merged_large.fam > merged_large.ind
+```
+
+
+
