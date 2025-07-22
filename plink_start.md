@@ -244,4 +244,43 @@ Output: 175111 variants loaded from .bim file.
 123 people (64 males, 59 females) loaded from .fam.
 --remove: 121 people remaining.
 
+##  Relatedness filtering
+Assuming a random population sample we are going to exclude all individuals above the pihat threshold of 0.2.
+pihat is PLINK's estimate of the proportion of identity-by-descent (IBD) between two individuals — how genetically related they are.
+Calculated
+```ini
+pihat = P(IBD=2) + 0.5 * P(IBD=1)
+```
+*  IBD=2 → the pair shares both alleles (like identical twins)
+*  IBD=1 → the pair shares one allele (like siblings)
+*  IBD=0 → the pair shares no alleles
+pihat > 0.2 suggests the individuals are at least second-degree relatives.
 
+Check for relationships between individuals with a pihat > 0.2.
+```
+plink --bfile ../7_hetero_filter/gold_hetero_filtered_7 --extract ../7_hetero_filter/pruned.prune.in --genome --min 0.2 --out pihat_min0.2
+```
+Visualize specifically parent-offspring relation using the z values:
+```
+awk '{ if ($8 >0.9) print $0 }' pihat_min0.2.genome>zoom_pihat.genome
+Rscript --no-save Relatedness.R
+```
+PO = parent-offspring, UN = unrelated individuals
+no PO, UN only = no found relatedness
+
+```
+plink --bfile ../7_hetero_filter/gold_hetero_filtered_7 --genome --out relatedness
+```
+175111 variants loaded from .bim file.
+121 people (64 males, 57 females) loaded from .fam.
+Using up to 15 threads (change this with --threads).
+Before main variant filters, 121 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.996996.
+175111 variants and 121 people pass filters and QC.
+Note: No phenotypes present.
+IBD calculations complete.  
+Finished writing relatedness.genome .
+
+
+So no relatedness found. Skipping filter founders step (no removed variants)
