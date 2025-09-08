@@ -1,0 +1,2 @@
+CHR_euro,SNP,A1_euro,A2_euro,MAF_euro,NCHROBS_euro,CHR_asia,A1_asia,A2_asia,MAF_asia,NCHROBS_asia,minor_euro,major_euro,minor_asia,major_asia,p_value,p_bonferroni,MAF_diff
+2,rs3213891,G,A,0.03306,242,2,G,A,0.1901,242,8,234,46,196,9.199272972467858e-08,0.012650932184467523,0.15703999999999999
