@@ -11,9 +11,9 @@ plink --bfile 0_import/kaz_wes_125_gold --freq
 Ambiguous sex IDs written to plink.nosex .
 Total genotyping rate is 0.939852.
 
-![lmiss](/NEW_ATTEMPT/qc_plots/lmiss.png)
-![imiss](/NEW_ATTEMPT/qc_plots/imiss.png)
-![maf](/NEW_ATTEMPT/qc_plots/maf.png)
+![lmiss](/qc_plots/lmiss.png)
+![imiss](/qc_plots/imiss.png)
+![maf](/qc_plots/maf.png)
 
 ```bash 
 plink --bfile 0_import/kaz_wes_125_gold \
@@ -35,7 +35,7 @@ plink --bfile 1_missing_maf/missingness_and_maf \
 plink --bfile 1_missing_maf/missingness_and_maf \
   --impute-sex 0.2 0.8 --make-bed --out 2_sexcheck/sex_imputed
 ```
-![sexcheck](/NEW_ATTEMPT/qc_plots/sexcheck.png)
+![sexcheck](/qc_plots/sexcheck.png)
 
 And now compare metadata sex with the imputed one
 
@@ -114,7 +114,7 @@ plink --bfile 3_autosomal_only/autosomal \
 2673 variants removed due to Hardy-Weinberg exact test.
 183012 variants and 120 people pass filters and QC.
 
-![hwe](/NEW_ATTEMPT/qc_plots/hwe.png)
+![hwe](/qc_plots/hwe.png)
 
 ## Heterozygocity check
 
