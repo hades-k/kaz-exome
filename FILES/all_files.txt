@@ -1,4 +1,0 @@
-here are all files:
-- merged_pruned <- kazakh + 12 pops from 1000G (same ref populations as before)
-- kazakh_8_exomes <- kazakhs post qc plink files 
-- 8_exclude_diff <- kazakh files, 1000 gen files (separate) having the same snps, post 1000gen qc. right before merging 
