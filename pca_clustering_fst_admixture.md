@@ -52,7 +52,7 @@ plink --bfile merged_pruned --pca 10 --out pca/pca
 
 Total samples: 1272
 
-![scree](/NEW_ATTEMPT/pca_plots/scree_plot.png)
+![scree](/pca_plots/scree_plot.png)
 
 #### Variance explained by each PC:
 - PC1: 56.3%
@@ -78,9 +78,9 @@ Total samples: 1272
 - PC1 to PC9: 97.3%
 - PC1 to PC10: 100.0%
 
-![3x3](/NEW_ATTEMPT/pca_plots/3x3_pca.png)
+![3x3](/pca_plots/3x3_pca.png)
 
-![supergroup](/NEW_ATTEMPT/pca_plots/pca_supergroup.png)
+![supergroup](/pca_plots/pca_supergroup.png)
 
 ## K-means clustering
 
@@ -88,7 +88,7 @@ Based on the scree plot, using PC1-PC3, 78.7% cumulative variance explained.
 
 Using elbow method and silhouette score to determine the right number of clusters
 
-![elbow](/NEW_ATTEMPT/clustering_plots/elbow_plot.png)
+![elbow](/clustering_plots/elbow_plot.png)
 
 Scores:
 - 3: 0.6389660469195052
@@ -98,8 +98,8 @@ Scores:
 
 K = 5 has the highest silhouette score.
 
-![cluster](/NEW_ATTEMPT/clustering_plots/5_kmeans_cluster.png)
-![3d_cluster](/NEW_ATTEMPT/clustering_plots/3d_clustering.png)
+![cluster](/clustering_plots/5_kmeans_cluster.png)
+![3d_cluster](/clustering_plots/3d_clustering.png)
 
 Measuring euclidean distances to the cluster containing most Kazakhs:
 
@@ -215,7 +215,7 @@ Number of permutations : 10100
           13   0.00000+-0.0000   0.00000+-0.0000   0.00000+-0.0000   0.00000+-0.0000   0.00000+-0.0000   0.00000+-0.0000   0.00000+-0.0000   0.00000+-0.0000   0.00000+-0.0000   0.00000+-0.0000   0.00000+-0.0000   0.00000+-0.0000           *
 ```
 
-![fst](/NEW_ATTEMPT/fst_matrix.png)
+![fst](/fst_matrix.png)
 
 ## ADMIXTURE
 
@@ -238,7 +238,7 @@ CV error rates:
 
 The lowest error rate is at K = 5.
 
-![cv](/NEW_ATTEMPT/admixture_plots/cv_er.png)
+![cv](/admixture_plots/cv_er.png)
 
 Creating population map file for from id2pop_fix.txt
 
@@ -305,15 +305,15 @@ ax.set_xticks([])
 plt.tight_layout()
 plt.show()
 ```
-![k2](/NEW_ATTEMPT/admixture_plots/k2.png)
-![k3](/NEW_ATTEMPT/admixture_plots/k3.png)
-![k4](/NEW_ATTEMPT/admixture_plots/k4.png)
-![k5](/NEW_ATTEMPT/admixture_plots/k5.png)
-![k6](/NEW_ATTEMPT/admixture_plots/k6.png)
-![k7](/NEW_ATTEMPT/admixture_plots/k7.png)
-![k8](/NEW_ATTEMPT/admixture_plots/k8.png)
-![k9](/NEW_ATTEMPT/admixture_plots/k9.png)
-![k10](/NEW_ATTEMPT/admixture_plots/k10.png)
+![k2](/admixture_plots/k2.png)
+![k3](/admixture_plots/k3.png)
+![k4](/admixture_plots/k4.png)
+![k5](/admixture_plots/k5.png)
+![k6](/admixture_plots/k6.png)
+![k7](/admixture_plots/k7.png)
+![k8](/admixture_plots/k8.png)
+![k9](/admixture_plots/k9.png)
+![k10](/admixture_plots/k10.png)
 
 
 
